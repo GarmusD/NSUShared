@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>f6c37a98-baa3-4609-a375-6334d8fa67ca</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>NSU.Shared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\IAlarmDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\ICircPumpDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\ICollectorDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\IComfortZoneDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\IConsoleDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\IElHeatingDataDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\IKTypeDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\IMCUStatusDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\INSUSysPartDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\IRelayModuleDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\ISwitchDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\ISystemFanDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\ITempSensorDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\ITempTriggerDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\ITempTriggerPieceDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\IThermoActuatorDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\IWaterBoilerDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DataContracts\IWoodBoilerDataContract.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\BinUploadDataContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\CollectorUpdateContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\ComfortZoneSetupContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\ComfortZoneUpdateContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\CircPumpUpdateContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\ConsoleExecCmdLineContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\KTypeSetupContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\AlarmStatusChanged.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\CircPumpStatusChanged.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\ComfortZoneActuatorChanged.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\ComfortZoneFloorTempChanged.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\ComfortZoneRoomTempChanged.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\HandshakeRequest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\HandshakeResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\KTypeTempChanged.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\NsuNetRequestBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\PingRequest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\RelayModuleChanged.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\SwitchStatusChanged.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\SystemFanPwmChanged.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\TempTriggerStatusChanged.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\TSensorTempChanged.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\WoodBoilerStatusChanged.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\NsuNet\WoodBoilerTempChanged.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\RelayModuleLockChContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\RelayModuleSetupContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\RelayModuleOpenChContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\SwitchClickContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\SwitchSetupContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\SysResetContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\SystemFanSetupContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\TempSensorSetupContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\TempTriggerSetupContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\UserCmdExecCommandContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\WaterBoilerSetupContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\WoodBoilerSetupContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\WoodBoilerStartUpContent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\WoodBoilerSwitchExhaustFanManual.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\WoodBoilerSwitchLadomatManual.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)JKeys.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\Credentials.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\AutoReconnect.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\EventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\INetChangeNotifier.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\INetMessage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\INetProtocol.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\INSUNetworkSocket.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\InternalArgBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\NetClientAccepts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\NetExceptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\NetProtocol.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\NetProtocolV1.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\NetProtocolV2.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\NSUNetQueue.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\NSUNetwork.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\NSUTimer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUNet\Times.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSys.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\ConsolePart.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\MCU.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\NSUPartBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\ElHeatingData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\Enums.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\EventArgs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\INSUPartBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\RelayModule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\SystemFan.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\TempTrigger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\TempTriggerPiece.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\ThermoActuator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\WaterBoiler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\CircPump.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\Collector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\NSUUI.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\NSUWindow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\Scenario.Builder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\Scenario.Builder.ScenarioObject.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\Scenario.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\Scenario.Loader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\HomeDrawings\Drawings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesBackArrow.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesGraphics.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesHotWaterOff.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesHotWaterOn.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesHouse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesHouse1AukstasOff.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesHouse1AukstasOn.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesHouse2AukstasOff.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesHouse2AukstasOn.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesHouseRusysOff.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesHouseRusysOn.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesSaule.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesSnaige.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesBG.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesTempDown.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesTempUp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\ComfortZone.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\WoodBoiler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\KType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\UIBytesWeatherOff.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUI\UIBytes\WeatherOn.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\TempSensor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUSystemPart\Switch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUtils\StringCompressor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUUtils\Utils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSUXMLConfig\NSUXMLConfig.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Serializer\INsuSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Serializer\LowercaseNamingStrategy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Serializer\NsuSerializer.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)NSUUI\Actions.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)DTO\ExtCommandContent\" />
+    <Folder Include="$(MSBuildThisFileDirectory)NSUXMLConfig\" />
+  </ItemGroup>
+</Project>
