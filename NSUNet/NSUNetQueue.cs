@@ -2,49 +2,49 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
-using NSU.Shared.NSUTypes;
 using System.Threading.Tasks;
+using Serilog;
 
 namespace NSU.Shared.NSUNet
 {
-
     public class NSUNetQueue
     {
-        const string LogTag = "NSUNetQueue";
         public delegate void CommandAvailableHandler(JObject cmd);
         public delegate void ResponseReceiveTimeoutHandler();
 
         public event CommandAvailableHandler OnCommandAvailable;
         public event ResponseReceiveTimeoutHandler OnResponseTimeout;
 
-        readonly Queue<JObject> queue;
-        JObject current;
-        string currentCmdID;
+        private readonly ILogger _logger;
+        readonly Queue<JObject> _queue;
+        JObject _current;
+        string _currentCmdID;
         //bool paused;
-        NSUTimer timer;
+        NSUTimer _timer;
         readonly object lck = new object();
 
 
         public NSUNetQueue()
         {
-            queue = new Queue<JObject>();
-            timer = new NSUTimer(15000);
-            timer.OnNSUTimer += OnCommandResponseTimerHandler;
-            currentCmdID = string.Empty;
+            _logger = Log.Logger.ForContext<NSUNetQueue>(true);
+            _queue = new Queue<JObject>();
+            _timer = new NSUTimer(15000);
+            _timer.OnNSUTimer += OnCommandResponseTimerHandler;
+            _currentCmdID = string.Empty;
         }
 
         void OnCommandResponseTimerHandler()
         {
-            NSULog.Debug(LogTag, $"OnCommandResponseTimerHandler().  currentCmdID: '{currentCmdID}'.");
-            timer.Stop();
+            _logger.Debug($"OnCommandResponseTimerHandler().  currentCmdID: '{_currentCmdID}'.");
+            _timer.Stop();
             OnResponseTimeout?.Invoke();
         }
 
         private void RaiseCurrentAsync()
         {
-            var c = current;
-            current = null;
-            NSULog.Debug(LogTag, "RaiseCurrent() in async mode.");
+            var c = _current;
+            _current = null;
+            _logger.Debug("RaiseCurrent() in async mode.");
             Task.Run(() =>
             {
                 if (c != null)
@@ -56,43 +56,43 @@ namespace NSU.Shared.NSUNet
 
         public void Add(JObject cmd)
         {
-            NSULog.Debug(LogTag, "Add(cmd)");
+            _logger.Debug("Add(cmd)");
             if (cmd != null)
             {
                 if (cmd.Property(JKeys.Generic.ResponseRequired) != null)
                 {
                     if (cmd.Property(JKeys.Generic.CommandID) == null)                    
                     {
-                        NSULog.Debug(LogTag, "Command does not contain required 'CommandID' field.");
+                        _logger.Debug("Command does not contain required 'CommandID' field.");
                         throw new Exception("Command does not contain required 'CommandID' field.");
                     }                    
                 }
-                NSULog.Debug(LogTag, "Adding command to queue.");
-                queue.Enqueue(cmd);
+                _logger.Debug("Adding command to queue.");
+                _queue.Enqueue(cmd);
                 CheckCommand();
             }
             else
-                NSULog.Debug(LogTag, "Command is NULL. Skipped.");
+                _logger.Debug("Command is NULL. Skipped.");
         }
 
         public void CheckCommand()
         {
-            NSULog.Debug(LogTag, "CheckCommand()");
-            if (current == null && queue.Count > 0 && string.IsNullOrEmpty(currentCmdID))
+            _logger.Debug("CheckCommand()");
+            if (_current == null && _queue.Count > 0 && string.IsNullOrEmpty(_currentCmdID))
             {
-                current = queue.Dequeue();
-                if (current.Property(JKeys.Generic.CommandID) != null &&
-                    !string.IsNullOrWhiteSpace((string)current[JKeys.Generic.CommandID]) &&
-                    current.Property(JKeys.Generic.ResponseRequired) != null &&
-                    Convert.ToBoolean((string)current[JKeys.Generic.ResponseRequired]))
+                _current = _queue.Dequeue();
+                if (_current.Property(JKeys.Generic.CommandID) != null &&
+                    !string.IsNullOrWhiteSpace((string)_current[JKeys.Generic.CommandID]) &&
+                    _current.Property(JKeys.Generic.ResponseRequired) != null &&
+                    Convert.ToBoolean((string)_current[JKeys.Generic.ResponseRequired]))
                 {
-                    current.Remove(JKeys.Generic.ResponseRequired);
-                    currentCmdID = (string)current[JKeys.Generic.CommandID];
-                    timer.Start();
+                    _current.Remove(JKeys.Generic.ResponseRequired);
+                    _currentCmdID = (string)_current[JKeys.Generic.CommandID];
+                    _timer.Start();
                 }
                 else
                 {
-                    currentCmdID = string.Empty;
+                    _currentCmdID = string.Empty;
                 }
                 RaiseCurrentAsync();
             }
@@ -100,15 +100,15 @@ namespace NSU.Shared.NSUNet
 
         public void ResponseReceived(JObject cmd)
         {
-            NSULog.Debug(LogTag, "ResponseReceived()");
+            _logger.Debug("ResponseReceived()");
             if (cmd.Property(JKeys.Generic.CommandID) != null)
             {
                 var cmdID = (string)cmd[JKeys.Generic.CommandID];
-                if (!string.IsNullOrEmpty(currentCmdID) && currentCmdID.Equals(cmdID))
+                if (!string.IsNullOrEmpty(_currentCmdID) && _currentCmdID.Equals(cmdID))
                 {
-                    NSULog.Debug(LogTag, "CmdID OK. Stopping communication timer.");
-                    timer.Stop();
-                    currentCmdID = string.Empty;
+                    _logger.Debug("CmdID OK. Stopping communication timer.");
+                    _timer.Stop();
+                    _currentCmdID = string.Empty;
                 }
             }
 
@@ -118,23 +118,23 @@ namespace NSU.Shared.NSUNet
             }
             catch (Exception e)
             {
-                NSULog.Exception(LogTag, "RespondReceived(): " + e.Message);
+                _logger.Error(e, "RespondReceived(): Exception: {ex}");
             }
         }
 
         public void Pause()
         {
             //paused = true;
-            if (current != null)
+            if (_current != null)
             {
-                timer.Stop();
+                _timer.Stop();
             }
         }
 
         public void Resume()
         {
             //paused = false;
-            if (current != null)
+            if (_current != null)
             {
                 RaiseCurrentAsync();
             }
@@ -146,10 +146,10 @@ namespace NSU.Shared.NSUNet
 
         public void Clear()
         {
-            current = null;
-            currentCmdID = string.Empty;
-            timer.Stop();
-            queue.Clear();
+            _current = null;
+            _currentCmdID = string.Empty;
+            _timer.Stop();
+            _queue.Clear();
         }
     }
 }

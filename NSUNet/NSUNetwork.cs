@@ -1,15 +1,12 @@
 ﻿#if !NSUWATCHER
 using System;
 using System.Text;
-using NSU.NSUSystem;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
-using NSU.Shared.NSUTypes;
 using NSU.Shared.Compress;
 using System.IO;
-using System.Collections.Generic;
-using NSUAppShared;
 using System.Threading.Tasks;
+using Serilog;
 
 #if __ANDROID__
 
@@ -26,8 +23,6 @@ namespace NSU.Shared.NSUNet
 
     public class NSUNetwork
     {
-        private const string LogTag = "NSUNetwork";
-
         public event EventHandler<NetChangedEventArgs> NetworkAvailabilityChanged;
         public event EventHandler<EventArgs> ConnectStarted;
         public event EventHandler<EventArgs> ConnectFailure;
@@ -39,7 +34,7 @@ namespace NSU.Shared.NSUNet
         public event EventHandler<ClientLogintFailureEventArgs> LoginFailed;
         public event EventHandler<DataReceivedEventArgs> DataReceived;
 
-
+        private readonly ILogger _logger;
         public Credentials Credentials => _credentials;
         public INetChangeNotifier NetChangeNotifier { set => SetNSUNetChangeNotifier(value); }
         public bool NetworkAvailable => GetNetworkAvailable();
@@ -60,6 +55,8 @@ namespace NSU.Shared.NSUNet
             _iSocket = nsusocket ?? throw new ArgumentNullException(nameof(nsusocket), "Value of INSUNetworkSocket cannot be null");
             _netChangeNotifier = netChangeNotifier ?? throw new ArgumentNullException(nameof(netChangeNotifier), "INetChangeNotifier cannot be null.");
             _credentials = credentials ?? throw new ArgumentNullException(nameof(credentials), "Credentials cannot be null");
+
+            _logger = Log.Logger.ForContext<NSUNetwork>(true);
 
             _iSocket.ConnectStarted += HandleOnConnectStart;
             _iSocket.Connected += HandleOnConnected;
@@ -125,14 +122,14 @@ namespace NSU.Shared.NSUNet
 
         private void HandleOnInvalidHost(object sender, EventArgs e)
         {
-            NSULog.Debug(LogTag, "Socket raised InvalidHost event.");
+            _logger.Debug("Socket raised InvalidHost event.");
             var evt = ConnectFailure;
             evt?.Invoke(this, EventArgs.Empty);
         }
 
         private void QueueOnResponseTimeoutHandler()
         {
-            NSULog.Debug(LogTag, "QueueOnResponseTimeoutHandler() - no response to command over time.");
+            _logger.Debug("QueueOnResponseTimeoutHandler() - no response to command over time.");
             _iSocket.Disconnect();
             _argbuilder.Clear();
             RaiseOnClientDisconnected();
@@ -162,7 +159,7 @@ namespace NSU.Shared.NSUNet
 
         void HandleOnDisconnected(object sender, EventArgs e)
         {
-            NSULog.Debug(LogTag, "HandleOnDisconnected ()");
+            _logger.Debug("HandleOnDisconnected ()");
             DC();
             RaiseOnClientDisconnected();
             if (NetworkAvailable)
@@ -171,7 +168,7 @@ namespace NSU.Shared.NSUNet
 
         void HandleOnConnectTimeout(object sender, EventArgs e)
         {
-            NSULog.Debug("NSUNetwork", "HandleOnConnectTimeout ()");
+            _logger.Debug("HandleOnConnectTimeout ()");
             Connecting = false;
             _pingTimer.Stop();
             _argbuilder.Clear();
@@ -181,7 +178,7 @@ namespace NSU.Shared.NSUNet
 
         void HandleOnConnectFailed(object sender, EventArgs e)
         {
-            NSULog.Debug("NSUNetwork", "HandleOnConnectFailed ()");
+            _logger.Debug("HandleOnConnectFailed ()");
             Connecting = false;
             _argbuilder.Clear();
             _pingTimer.Stop();
@@ -191,11 +188,11 @@ namespace NSU.Shared.NSUNet
 
         void HandleOnConnected(object sender, EventArgs e)
         {
-            NSULog.Debug(LogTag, "HandleOnConnected()");
+            _logger.Debug("HandleOnConnected()");
             Connecting = false;
             _argbuilder.Clear();
             _autoReconnect.StopReconnect();
-            NSULog.Debug(LogTag, "HandleOnConnected() - Sending handshake");
+            _logger.Debug("HandleOnConnected() - Sending handshake");
             JObject jo = new JObject
             {
                 [JKeys.Generic.Target] = JKeys.Syscmd.TargetName,
@@ -208,7 +205,7 @@ namespace NSU.Shared.NSUNet
 
         void HandleOnNetworkAvailableChange(object sender, NetChangedEventArgs e)
         {
-            NSULog.Debug(LogTag, string.Format("HandleOnNetworkAvailableChange ({0})", e.NetAvailable));
+            _logger.Debug(string.Format("HandleOnNetworkAvailableChange ({0})", e.NetAvailable));
             NetworkAvailabilityChanged?.Invoke(this, e);
             if (e.NetAvailable)
             {
@@ -224,7 +221,7 @@ namespace NSU.Shared.NSUNet
 
         void HandleOnPingTimer()
         {
-            NSULog.Debug(LogTag, "HandleOnPingTimer()");
+            _logger.Debug("HandleOnPingTimer()");
             _pingTimer.Stop();
             JObject jo = new JObject
             {
@@ -241,7 +238,7 @@ namespace NSU.Shared.NSUNet
 
         internal void DC()
         {
-            NSULog.Debug(LogTag, "DC() - clearing internal data.");
+            _logger.Debug("DC() - clearing internal data.");
             _argbuilder.Clear();
             _pingTimer.Stop();
             _queue.Clear();
@@ -257,16 +254,23 @@ namespace NSU.Shared.NSUNet
 
         public async Task ConnectAsync()
         {
+            _logger.Debug("ConnectAsync()");
             if (Connected) 
                 Disconnect();
 
             if (NetworkAvailable)
+            {
                 await _iSocket.ConnectAsync(_credentials.Host, _credentials.Port);
+            }
+            else
+            {
+                _logger.Debug("ConnectAsync() Network not available.");
+            }
         }
 
         public void Disconnect()
         {
-            NSULog.Debug(LogTag, "Disconnect(). Calling socket.Disconnect()");
+            _logger.Debug("Disconnect(). Calling socket.Disconnect()");
             _iSocket.Disconnect();
             _autoReconnect.StopReconnect();
             DC();
@@ -301,7 +305,7 @@ namespace NSU.Shared.NSUNet
         {
                 try
                 {
-                    NSULog.Debug(LogTag, "SendString: " + jstr);
+                _logger.Debug("SendString: " + jstr);
                     var compressed = StringCompressor.Zip(jstr);
                     using (MemoryStream ms = new MemoryStream())
                     {
@@ -319,7 +323,7 @@ namespace NSU.Shared.NSUNet
                 }
                 catch (Exception e)
                 {
-                    NSULog.Debug(LogTag, "SendString error: " + e.Message);
+                _logger.Debug("SendString error: " + e.Message);
                 }
         }
 
@@ -344,7 +348,7 @@ namespace NSU.Shared.NSUNet
                 }
                 catch (Exception e)
                 {
-                    NSULog.Debug(LogTag, "SendString error: " + e.Message);
+                _logger.Debug("SendString error: " + e.Message);
                 }
         }
 
@@ -405,7 +409,7 @@ namespace NSU.Shared.NSUNet
 
         void ProccessNetworkData(byte[] buf, int count)
         {
-            NSULog.Debug(LogTag, $"ProccessNetworkData() - Data count: {count}");
+            _logger.Debug($"ProccessNetworkData() - Data count: {count}");
             if (count > 0)
             {
                 try
@@ -418,15 +422,15 @@ namespace NSU.Shared.NSUNet
 
                         if (args != null)
                         {
-                            if (args.dataType == NetDataType.String)
+                            if (args.DataType == NetDataType.String)
                             {
-                                string resp_str = args.data as string;
-                                NSULog.Debug(LogTag, "ProccessNetworkData(): " + resp_str);
+                                string resp_str = args.Data as string;
+                                _logger.Debug("ProccessNetworkData(): " + resp_str);
                                 if (!string.IsNullOrWhiteSpace(resp_str))
                                 {
                                     if (resp_str.StartsWith("{"))
                                     {
-                                        NSULog.Debug(LogTag, "Raising OnClientDataReceived event.");
+                                        _logger.Debug("Raising OnClientDataReceived event.");
                                         try
                                         {
                                             JObject jo = (JObject)JsonConvert.DeserializeObject(resp_str);
@@ -435,7 +439,7 @@ namespace NSU.Shared.NSUNet
                                         }
                                         catch (Exception ex)
                                         {
-                                            NSULog.Debug(LogTag, ex.Message);
+                                            _logger.Error(ex, "ProccessNetworkData(): Exception: {ex}");
                                         }
                                     }
                                 }
@@ -456,7 +460,7 @@ namespace NSU.Shared.NSUNet
                 catch (Exception e)
                 {
                     //ivyko fignia kazkokia
-                    NSULog.Debug(LogTag, "In Network runner: " + e.Message);
+                    _logger.Debug("In Network runner: " + e.Message);
                     Disconnect();
                     _autoReconnect.StartReconnect();
                 }

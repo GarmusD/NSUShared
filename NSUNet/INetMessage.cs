@@ -8,9 +8,9 @@
 
     public interface INetMessage
     {
-        public DataType DataType { get; }
-        public object Data { get; }
-        public string AsString();
-        public byte[] AsBytes();
+        DataType DataType { get; }
+        object Data { get; }
+        string AsString();
+        byte[] AsBytes();
     }
 }

@@ -15,7 +15,7 @@ namespace NSU.Shared.NSUNet
             };
         }
 
-        public INetMessage? Decode(byte[] data, int protocolVersion)
+        public INetMessage Decode(byte[] data, int protocolVersion)
         {
             return Select(protocolVersion).Decode(data);
         }
@@ -32,11 +32,14 @@ namespace NSU.Shared.NSUNet
 
         public List<byte[]> Encode(INetMessage data, int protocolVersion)
         {
-            return data.DataType switch
+            switch (data.DataType)
             {
-                DataType.String => Select(protocolVersion).Encode(data.AsString()),
-                DataType.Bytes => Select(protocolVersion).Encode(data.AsBytes()),
-                _ => throw new ArgumentOutOfRangeException(nameof(data.DataType)),
+                case DataType.String:
+                    return Select(protocolVersion).Encode(data.AsString());
+                case DataType.Bytes:
+                    return Select(protocolVersion).Encode(data.AsBytes());
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(data.DataType));
             };
         }
 

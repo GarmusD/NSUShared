@@ -42,7 +42,7 @@ namespace NSU.Shared.NSUNet
     {
         const int HeaderSize = sizeof(byte) + sizeof(int);
         
-        public event EventHandler<DataAvailableEventArgs>? DataAvailable;
+        public event EventHandler<DataAvailableEventArgs> DataAvailable;
         byte[] buff = new byte[0];
 
         private bool ValidateDataType(int value)
@@ -95,7 +95,7 @@ namespace NSU.Shared.NSUNet
                     else
                         break;
                 }
-                catch(Exception ex)
+                catch
                 {
                     //NSULog.Exception(LogTag, ex.Message);
                     //clear data
@@ -134,7 +134,7 @@ namespace NSU.Shared.NSUNet
         readonly string LogTag = "NetServer.InternalDataReceivedArgs";
         const int HeaderSize = sizeof(byte) + sizeof(int);
         readonly Buffer buffer;
-        byte[]? intBuff;
+        byte[] intBuff;
         int partDataPos;
         readonly Queue<InternalArgs> queue = new Queue<InternalArgs>();
         public bool DataAvailable => queue.Any();
@@ -145,13 +145,13 @@ namespace NSU.Shared.NSUNet
             buffer.DataAvailable += Buffer_OnDataAvailable;
         }
 
-        private void Buffer_OnDataAvailable(object? sender, DataAvailableEventArgs e)
+        private void Buffer_OnDataAvailable(object sender, DataAvailableEventArgs e)
         {
             int idx = 0;
             NetDataType dt = (NetDataType)e.Data[idx++];
             int dataLength = BitConverter.ToInt32(e.Data, idx);
             idx += sizeof(int);
-            byte[]? buff;
+            byte[] buff;
             switch (dt)
             {
                 case NetDataType.PartialInit:                    
@@ -179,7 +179,7 @@ namespace NSU.Shared.NSUNet
                     if (buff?.Length >= HeaderSize)
                     {
                         dt = (NetDataType)buff[idx++];
-                        dataLength = BitConverter.ToInt32(buff!, idx);
+                        dataLength = BitConverter.ToInt32(buff, idx);
                         idx += sizeof(int);
                         break;
                     }
@@ -207,10 +207,10 @@ namespace NSU.Shared.NSUNet
             switch (dt)
             {
                 case NetDataType.String:
-                    finalS = Encoding.ASCII.GetString(buff!, idx, dataLength);
+                    finalS = Encoding.ASCII.GetString(buff, idx, dataLength);
                     break;
                 case NetDataType.CompressedString:
-                    finalS = StringCompressor.Unzip(buff!, idx, dataLength);
+                    finalS = StringCompressor.Unzip(buff, idx, dataLength);
                     break;
                     default:
                     

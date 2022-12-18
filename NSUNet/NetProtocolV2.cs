@@ -7,11 +7,11 @@ namespace NSU.Shared.NSUNet
 {
     public class NetProtocolV2 : INetProtocol
     {
-        private const int MAX_SEND_MESSAGE_SIZE = 512;
-        private const int SEND_BUFFER_HEADER_SIZE = sizeof(byte) + sizeof(int);
-        private const int MAX_SEND_CONTENT_SIZE = MAX_SEND_MESSAGE_SIZE - SEND_BUFFER_HEADER_SIZE;
+        private const int MaxSendMessageSize = 512;
+        private const int SendBufferHeaderSize = sizeof(byte) + sizeof(int);
+        private const int MaxSendContentSize = MaxSendMessageSize - SendBufferHeaderSize;
 
-        public INetMessage? Decode(byte[] data)
+        public INetMessage Decode(byte[] data)
         {
             throw new NotImplementedException();
         }
@@ -42,7 +42,7 @@ namespace NSU.Shared.NSUNet
 
         public List<byte[]> Multipart(byte[] container)
         {
-            if (container.Length <= MAX_SEND_MESSAGE_SIZE)
+            if (container.Length <= MaxSendMessageSize)
             {
                 return new List<byte[]> { container };
             }
@@ -56,7 +56,7 @@ namespace NSU.Shared.NSUNet
             while (true)
             {
                 multipart.Add(CreatePartialContent(container, partStartPos));
-                partStartPos += MAX_SEND_CONTENT_SIZE;
+                partStartPos += MaxSendContentSize;
                 if (partStartPos >= container.Length)
                     break;
             }
@@ -83,7 +83,7 @@ namespace NSU.Shared.NSUNet
             {
                 using (MemoryStream ms = new MemoryStream())
                 {
-                    int partLength = Math.Min(content.Length - start, MAX_SEND_CONTENT_SIZE);
+                    int partLength = Math.Min(content.Length - start, MaxSendContentSize);
                     //_logger.Debug($"Bytes left in part: {leftL}");
                     ms.WriteByte((byte)NetDataType.Partial);
                     ms.Write(BitConverter.GetBytes(partLength), 0, sizeof(int));

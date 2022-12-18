@@ -21,8 +21,9 @@ namespace NSU.Shared.NSUNet
         public string Password => _password;
         public string DeviceID { get => _deviceID; set => SetDeviceId(value); }
         public string Hash { get => _hash; set => SetHash(value); }
-        public bool HostOk => !string.IsNullOrEmpty(Host) && Port != 0;
-        public bool CredentialsOk => !string.IsNullOrEmpty(UserName) && !string.IsNullOrEmpty(Password);
+        public bool IsCredentialsOk => !string.IsNullOrEmpty(_userName) && !string.IsNullOrEmpty(_password);
+        public bool IsHostPortOk => CheckIsHostPortOk();
+        public bool IsAllCredentialsOk => IsCredentialsOk && IsHostPortOk;
         public bool UseHashForLogin => !string.IsNullOrEmpty(Hash) && !string.IsNullOrEmpty(DeviceID);
 
 
@@ -33,9 +34,11 @@ namespace NSU.Shared.NSUNet
         private string _deviceID = string.Empty;
         private string _hash = string.Empty;
 
-        public Credentials(){}
+        public Credentials()
+        {
+        }
 
-        public void SetUsernameAndPassword(string newUsername, string newPassword)
+        public void SetUsernameAndPassword(string newUsername, string newPassword, bool save)
         {
             if (_userName != newUsername || _password != newPassword)
             {
@@ -43,7 +46,8 @@ namespace NSU.Shared.NSUNet
                 string oldPassword = _password;
                 _userName = newUsername;
                 _password = newPassword;
-                RaisePasswordChanged(oldUsername, oldPassword, newUsername, newPassword);
+                if(save)
+                    RaisePasswordChanged(oldUsername, oldPassword, newUsername, newPassword);
             }
         }
 
@@ -81,6 +85,17 @@ namespace NSU.Shared.NSUNet
                 _hash = value;
                 RaiseInfoChanged(Field.Hash, _hash);
             }
+        }
+
+        private bool CheckIsHostPortOk()
+        {
+            try
+            {
+                return Uri.CheckHostName(_host) != UriHostNameType.Unknown;
+                //return (_hostValidator?.Invoke(_host)).GetValueOrDefault();
+            }
+            catch { }
+            return false;
         }
 
         private void RaiseInfoChanged(Field infoField, string newValue)

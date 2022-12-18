@@ -6,8 +6,8 @@ namespace NSU.Shared.NSUNet
 {
     public interface INetProtocol
     {
-        public List<byte[]> Encode(string data);
-        public List<byte[]> Encode(byte[] data);
-        public INetMessage? Decode(byte[] data);
+        List<byte[]> Encode(string data);
+        List<byte[]> Encode(byte[] data);
+        INetMessage Decode(byte[] data);
     }
 }

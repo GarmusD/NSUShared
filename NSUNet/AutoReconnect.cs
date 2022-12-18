@@ -1,6 +1,6 @@
 ﻿#if !NSUWATCHER
 using System;
-using NSU.NSUSystem;
+using Serilog;
 #if __ANDROID__
 using System.Timers;
 #elif WINDOWS_UWP
@@ -11,7 +11,7 @@ namespace NSU.Shared.NSUNet
 {
     public class AutoReconnect
     {
-        private const string LogTag = "AutoReconnect";
+        private readonly ILogger _logger;
         public delegate void OnDoReconnectHandler(int count);
 
         public event OnDoReconnectHandler OnDoReconnect;
@@ -38,7 +38,7 @@ namespace NSU.Shared.NSUNet
             get { return enabled; }
             set {
                 enabled = value;
-                NSULog.Debug(LogTag, $"Setting property Enabled = {enabled}");
+                _logger.Debug($"Setting property Enabled = {enabled}");
                 if (!enabled)
                     StopReconnect();
             }
@@ -47,6 +47,7 @@ namespace NSU.Shared.NSUNet
 
         public AutoReconnect()
         {
+            _logger = Log.Logger.ForContext<AutoReconnect>(true);
             FirstRetry = 15000;
             currentInterval = FirstRetry;
             Increment = 15 * 1000;
@@ -79,7 +80,7 @@ namespace NSU.Shared.NSUNet
             }
             catch (Exception ex)
             {
-                NSULog.Exception(LogTag, "StartTimer()" + ex.Message);
+                _logger.Error(ex, "StartTimer() Exception: {ex}");
                 StopTimer();
             }
 #endif
@@ -101,7 +102,7 @@ namespace NSU.Shared.NSUNet
             }
             catch (Exception ex)
             {
-                NSULog.Exception(LogTag, "StopReconnect()" + ex.Message);
+                _logger.Error(ex, "StopReconnect() Exception: {ex}");
             }
 #endif
             working = false;
@@ -109,7 +110,7 @@ namespace NSU.Shared.NSUNet
 
         void Reset()
         {
-            NSULog.Debug(LogTag, "Reset()");
+            _logger.Debug("Reset()");
             currentInterval = FirstRetry;
             count = 0;
         }
@@ -122,7 +123,7 @@ namespace NSU.Shared.NSUNet
         void TimerElapsedHandler(ThreadPoolTimer t)
         {
 #endif
-            NSULog.Debug("AutoReconnect", "HandleTimerElapsed()");
+            _logger.Debug("TimerElapsedHandler()");
             StopTimer();
             if(IncrementalRetries)
             {
@@ -140,14 +141,14 @@ namespace NSU.Shared.NSUNet
         {
             if (enabled)
             {
-                NSULog.Debug("AutoReconnect", $"Starting reconnect in {TimeSpan.FromMilliseconds(currentInterval).Minutes} min {TimeSpan.FromMilliseconds(currentInterval).Seconds} sec.");
+                _logger.Debug($"Starting reconnect in {TimeSpan.FromMilliseconds(currentInterval).Minutes} min {TimeSpan.FromMilliseconds(currentInterval).Seconds} sec.");
                 StartTimer();
             }
         }
 
         public void StopReconnect()
         {
-            NSULog.Debug("AutoReconnect", "StopReconnect() called.");
+            _logger.Debug("AutoReconnect", "StopReconnect() called.");
             StopTimer();
             Reset();
         }
