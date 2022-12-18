@@ -1,8 +1,4 @@
 ﻿using Newtonsoft.Json;
-using NSUWatcher.Interfaces.MCUCommands;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NSU.Shared.DTO.NsuNet
 {

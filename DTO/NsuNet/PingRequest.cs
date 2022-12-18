@@ -1,9 +1,4 @@
-﻿using NSUWatcher.Interfaces.MCUCommands;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NSU.Shared.DTO.NsuNet
+﻿namespace NSU.Shared.DTO.NsuNet
 {
     public class PingRequest : NsuNetRequestBase
     {
