@@ -7,9 +7,9 @@ namespace NSU.Shared.DataContracts
 {
     public interface IThermoActuatorDataContract
     {
-        public int Index { get; }
-        public ActuatorType Type { get; set; }
-        public int RelayChannel { get; set; }
-        public bool? Opened { get; set; }
+        byte Index { get; }
+        ActuatorType Type { get; set; }
+        byte RelayChannel { get; set; }
+        bool? Opened { get; set; }
     }
 }

@@ -7,12 +7,12 @@ namespace NSU.Shared.DataContracts
 {
     public interface ISystemFanDataContract : INSUSysPartDataContract
     {
-        public int ConfigPos { get; set; }
-        public bool Enabled { get; set; }
-        public string Name { get; set; }
-        public string TempSensorName { get; set; }
-        public double MinTemp { get; set; }
-        public double MaxTemp { get; set; }
-        public int CurrentPWM { get; set; }
+        byte ConfigPos { get; set; }
+        bool Enabled { get; set; }
+        string Name { get; set; }
+        string TempSensorName { get; set; }
+        double MinTemp { get; set; }
+        double MaxTemp { get; set; }
+        int CurrentPWM { get; set; }
     }
 }

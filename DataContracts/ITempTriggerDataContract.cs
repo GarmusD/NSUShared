@@ -9,12 +9,10 @@ namespace NSU.Shared.DataContracts
 {
     public interface ITempTriggerDataContract : INSUSysPartDataContract
     {
-        public const int MAX_TEMPTRIGGERPIECES = 4;
-
-        public int ConfigPos { get; set; }
-        public bool Enabled { get; set; }
-        public string Name { get; set; }
-        public Status Status { get; set; }
-        public ITempTriggerPieceDataContract[] TempTriggerPieces { get; }
+        byte ConfigPos { get; set; }
+        bool Enabled { get; set; }
+        string Name { get; set; }
+        Status Status { get; set; }
+        ITempTriggerPieceDataContract[] TempTriggerPieces { get; }
     }
 }

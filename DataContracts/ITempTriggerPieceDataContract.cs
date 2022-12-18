@@ -7,11 +7,11 @@ namespace NSU.Shared.DataContracts
 {
     public interface ITempTriggerPieceDataContract
     {
-        public int Index { get; set; }
-        public bool Enabled { get; set; }
-        public string TSensorName { get; set; }
-        public TriggerCondition Condition { get; set; }
-        public double Temperature { get; set; }
-        public double Histeresis { get; set; }
+        byte Index { get; set; }
+        bool Enabled { get; set; }
+        string TSensorName { get; set; }
+        TriggerCondition Condition { get; set; }
+        double Temperature { get; set; }
+        double Histeresis { get; set; }
     }
 }

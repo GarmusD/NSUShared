@@ -6,7 +6,7 @@ namespace NSU.Shared.DataContracts
 {
     public interface IConsoleDataContract : INSUSysPartDataContract
     {
-        public string Output { get; set; }
-        public List<object> ContextList { get; }
+        string Output { get; set; }
+        List<object> ContextList { get; }
     }
 }

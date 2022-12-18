@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NSU.Shared.DataContracts
+﻿namespace NSU.Shared.DataContracts
 {
     public interface IElHeatingDataDataContract
     {
-        public int Index { get; set; }
-        public int StartHour { get; set; }
-        public int StartMin { get; set; }
-        public int EndHour { get; set; }
-        public int EndMin { get; set; }
+        byte Index { get; set; }
+        byte StartHour { get; set; }
+        byte StartMin { get; set; }
+        byte EndHour { get; set; }
+        byte EndMin { get; set; }
     }
 }

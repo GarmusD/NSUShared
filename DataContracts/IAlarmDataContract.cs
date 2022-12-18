@@ -6,8 +6,6 @@ namespace NSU.Shared.DataContracts
 {
     public interface IAlarmDataContract : INSUSysPartDataContract
     {
-        const int MaxAlarmChannels = 8;
-
         int ConfigPos { get; set; }
         IAlarmChannelInfo[] ChannelInfo { get; set; }
         double AlarmTemp { get; set; }

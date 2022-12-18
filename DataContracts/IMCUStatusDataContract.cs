@@ -15,9 +15,9 @@ namespace NSU.Shared.DataContracts
 
     public interface IMCUStatusDataContract : INSUSysPartDataContract
     {
-        public MCUStatus Status { get; set; }
-        public int FreeMem { get; set; }
-        public int UpTime { get; set; }
-        public bool RebootRequired { get; set; }
+        MCUStatus Status { get; set; }
+        int FreeMem { get; set; }
+        int UpTime { get; set; }
+        bool RebootRequired { get; set; }
     }
 }

@@ -8,24 +8,24 @@ namespace NSU.Shared.DataContracts
 {
     public interface IWoodBoilerDataContract : INSUSysPartDataContract
     {
-        public int ConfigPos { get; set; }
-        public bool Enabled { get; set; }
-        public string Name { get; set; }
-        public string TSensorName { get; set; }
-        public string KTypeName { get; set; }
-        public int LadomChannel { get; set; }
-        public Status LadomStatus { get; set; }
-        public bool LadomatIsManual { get; set; }
-        public int ExhaustFanChannel { get; set; }
-        public Status ExhaustFanStatus { get; set; }
-        public bool ExhaustFanIsManual { get; set; }
-        public double WorkingTemp { get; set; }
-        public double Histeresis { get; set; }
-        public WoodBoilerStatus WBStatus { get; set; }
-        public double CurrentTemp { get; set; }
-        public WoodBoilerTempStatus TempStatus { get; set; }
-        public double LadomatTemp { get; set; }
-        public string LadomatTriggerName { get; set; }
-        public string WaterBoilerName { get; set; }
+        byte ConfigPos { get; set; }
+        bool Enabled { get; set; }
+        string Name { get; set; }
+        string TSensorName { get; set; }
+        string KTypeName { get; set; }
+        int LadomChannel { get; set; }
+        Status LadomStatus { get; set; }
+        bool LadomatIsManual { get; set; }
+        int ExhaustFanChannel { get; set; }
+        Status ExhaustFanStatus { get; set; }
+        bool ExhaustFanIsManual { get; set; }
+        double WorkingTemp { get; set; }
+        double Histeresis { get; set; }
+        WoodBoilerStatus WBStatus { get; set; }
+        double CurrentTemp { get; set; }
+        WoodBoilerTempStatus TempStatus { get; set; }
+        double LadomatTemp { get; set; }
+        string LadomatTriggerName { get; set; }
+        string WaterBoilerName { get; set; }
     }
 }

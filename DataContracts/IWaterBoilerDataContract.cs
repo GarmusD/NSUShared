@@ -8,16 +8,14 @@ namespace NSU.Shared.DataContracts
 {
     public interface IWaterBoilerDataContract : INSUSysPartDataContract
     {
-        public const int MAX_WATERBOILER_EL_HEATING_COUNT = 7;
-
-        public int ConfigPos { get; set; }
-        public bool Enabled { get; set; }
-        public string Name { get; set; }
-        public string TempSensorName { get; set; }
-        public string TempTriggerName { get; set; }
-        public string CircPumpName { get; set; }
-        public bool ElHeatingEnabled { get; set; }
-        public int ElHeatingChannel { get; set; }
-        public IElHeatingDataDataContract[] ElHeatingData { get; set; }
+        byte ConfigPos { get; set; }
+        bool Enabled { get; set; }
+        string Name { get; set; }
+        string TempSensorName { get; set; }
+        string TempTriggerName { get; set; }
+        string CircPumpName { get; set; }
+        bool ElHeatingEnabled { get; set; }
+        int ElHeatingChannel { get; set; }
+        IElHeatingDataDataContract[] ElHeatingData { get; set; }
     }
 }

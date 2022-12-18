@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Xml.Linq;
-
-namespace NSU.Shared.DataContracts
+﻿namespace NSU.Shared.DataContracts
 {
     public interface IComfortZoneDataContract : INSUSysPartDataContract
     {
-        int ConfigPos { get; set; }
+        byte ConfigPos { get; set; }
         bool Enabled { get; set; }
         string Name { get; set; }
         string Title { get; set; }

@@ -7,10 +7,10 @@ namespace NSU.Shared.DataContracts
 {
     public interface IKTypeDataContract : INSUSysPartDataContract
     {
-        public int ConfigPos { get; set; }
-        public bool Enabled { get; set; }
-        public string Name { get; set; }
-        public int Interval { get; set; }
-        public int Temperature { get; set; }
+        byte ConfigPos { get; set; }
+        bool Enabled { get; set; }
+        string Name { get; set; }
+        int Interval { get; set; }
+        int Temperature { get; set; }
     }
 }
