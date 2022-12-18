@@ -6,18 +6,15 @@ using NSU.Shared.NSUNet;
 using NSU.Shared;
 using NSUAppShared.NSUSystemParts;
 using Newtonsoft.Json.Linq;
-using NSU.Shared.NSUTypes;
-using NSUAppShared;
 using NSU.Shared.NSUXMLConfig;
 using Console = NSUAppShared.NSUSystemParts.Console;
+using Serilog;
 
 namespace NSU.NSUSystem
 {
 
     public class NSUSys
     {
-        private const string LogTag = "NSUSys";
-
         public class NSUSysPartInfo
         {
             public PartTypes PartType;
@@ -28,6 +25,7 @@ namespace NSU.NSUSystem
         public event EventHandler<EventArgs> OnNSUSystemReady;
         public event EventHandler OnNSUSystemUnavailable;
 
+        private readonly ILogger _logger;
         private readonly NSUSysPartInfo _sysPart;
         
         /*
@@ -45,7 +43,9 @@ namespace NSU.NSUSystem
 
         public NSUSys(NSUNetwork network)
         {
+            
             NSUNetwork = network ?? throw new ArgumentNullException(nameof(network), "NSUNetwork cannot be null.");
+            _logger = Log.Logger.ForContext<NSUSys>(true);
 
             //Add NsuNet event handlers
             NSUNetwork.HandshakeReceived += OnHandshakeReceivedHandler;
@@ -101,7 +101,7 @@ namespace NSU.NSUSystem
 
         private bool DoCredentialsLogin()
         {
-            if (NSUNetwork.Credentials.CredentialsOk)
+            if (NSUNetwork.Credentials.IsCredentialsOk)
             {
                 JObject jo = new JObject
                 {
@@ -158,7 +158,7 @@ namespace NSU.NSUSystem
             if (partInfo != null)
                 partInfo.Part.ParseNetworkData(e.Data);
             else
-                NSULog.Debug("HandleOnClientDataReceived2", $"NSUSysPart [{(string)e.Data[JKeys.Generic.Target]}] not found.");
+                _logger.Debug($"OnClientDataReceivedHandler(): NSUSysPart [{(string)e.Data[JKeys.Generic.Target]}] not found.");
         }
 
         internal void ReInit()
@@ -170,7 +170,7 @@ namespace NSU.NSUSystem
 
         internal void MakeReady()
         {
-            NSULog.Debug(LogTag, "MakeReady(). Invoking OnNSUPartsReady event.");
+            _logger.Debug("MakeReady(). Invoking OnNSUPartsReady event.");
             NSUSystemReady = true;
             try
             {
@@ -179,7 +179,7 @@ namespace NSU.NSUSystem
             }
             catch(Exception ex)
             {
-                NSULog.Exception(LogTag, $"OnNSUPartsReady exception: {ex}");
+                _logger.Error($"MakeReady() exception: {ex}");
             }
         }
 
@@ -187,7 +187,7 @@ namespace NSU.NSUSystem
         {
             if (NSUSystemReady)
             {
-                NSULog.Debug(LogTag, "MakeUnavailable()");
+                _logger.Debug("MakeUnavailable()");
                 NSUSystemReady = false;
                 var evt = OnNSUSystemUnavailable;
                 evt?.Invoke(this, EventArgs.Empty);
