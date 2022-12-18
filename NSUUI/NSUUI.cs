@@ -52,7 +52,7 @@ namespace NSU.Shared.NSUUI
         Graphics,
         SwitchButton,
         Ladomat,
-        Ventilator,
+        ExhaustFan,
         CircPump,
         TempBar,
         WeatherInfo,
@@ -190,7 +190,7 @@ namespace NSU.Shared.NSUUI
     *********************************************/
     public interface INSUUIExhaustFan : INSUUIBase
     {
-        void AttachSmokeFan(string name);
+        void AttachExhaustFanByName(string name);
     }
     /*********************************************
     *********************************************/

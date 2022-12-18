@@ -1,7 +1,4 @@
-﻿using System.Runtime.Intrinsics.X86;
-using System.Security.Cryptography;
-
-namespace NSU.Shared.NSUUI
+﻿namespace NSU.Shared.NSUUI
 {
     public partial class Scenario
     {
@@ -111,11 +108,11 @@ namespace NSU.Shared.NSUUI
             chimneytemp.UIID = "chimneyt";
             chimneytemp.AttachKType("dumu_temp");
 
-            var smokefan = wnd.AddUIElement(NSUUIClass.Ventilator) as INSUUIExhaustFan;
+            var smokefan = wnd.AddUIElement(NSUUIClass.ExhaustFan) as INSUUIExhaustFan;
             smokefan.Left = 43;
             smokefan.Top = 145;
             smokefan.UIID = "vent";
-            smokefan.AttachSmokeFan("default");
+            smokefan.AttachExhaustFanByName("default");
 
             var katilas = wnd.AddUIElement(NSUUIClass.MonoBitmap) as INSUUIMonoBmp;
             katilas.SetResource(NSUBitmapResource.Katilas);
@@ -291,7 +288,7 @@ namespace NSU.Shared.NSUUI
             wswth?.SetOffBMPBytes(UIBytes.UIBytes.WeatherOffBMP);
 
             //Create windows
-            INSUUIComfortZone? cz;
+            INSUUIComfortZone cz;
 
             wnd = grp.CreateWindow("rusys");
             wnd.IsDefault = false;
