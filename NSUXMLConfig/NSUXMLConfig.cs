@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Xml;
 using System.Xml.Linq;
-using System.IO;
-using Serilog;
 
 namespace NSU.Shared.NSUXMLConfig
 {
@@ -37,8 +34,6 @@ namespace NSU.Shared.NSUXMLConfig
         private readonly string xWaterBoilers = "WaterBoilers";
         private readonly string xWoodBoilers = "WoodBoilers";
 
-        private readonly ILogger _logger;
-
         XDocument xdoc;
         XElement root;
 
@@ -55,12 +50,23 @@ namespace NSU.Shared.NSUXMLConfig
         }
         private Guid configID = Guid.Empty;
 
-        public NSUXMLConfig(ILogger logger)
+        public NSUXMLConfig()
         {
-            _logger = logger.ForContext<NSUXMLConfig>() ?? throw new ArgumentNullException(nameof(logger), "Instance of ILogger cannot be null.");
             xdoc = CreateNew();
             root = xdoc.Root;
             configID = Guid.Parse(GetConfigSection(ConfigSection.ConfigID).Element("Value").Value);
+        }
+
+        public bool Load(string xmlString)
+        {
+            try
+            {
+                xdoc = XDocument.Load(xmlString);
+                root = xdoc.Root;
+                configID = Guid.Parse(GetConfigSection(ConfigSection.ConfigID).Element("Value").Value);
+                return true;
+            }
+            catch { return false; }
         }
 
         public void Clear()
@@ -120,7 +126,6 @@ namespace NSU.Shared.NSUXMLConfig
                 case ConfigSection.WoodBoilers:
                     return root.Element(xWoodBoilers);
                 default:
-                    _logger.Debug(LogTag, "XML section NOT found.");
                     throw new NotImplementedException($"XML Config section [{section}] not implemented.");
             }
         }
