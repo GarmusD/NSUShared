@@ -1,8 +1,6 @@
 ﻿using NSU.Shared.DataContracts;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 
 namespace NSU.Shared.NSUSystemPart
@@ -15,20 +13,20 @@ namespace NSU.Shared.NSUSystemPart
         private const string XMLAttrEndHour = "endHour";
         private const string XMLAttrEndMin = "endMin";
 
-        public int Index { get; set; }
-        public int StartHour { get => _startHour; set => SetStartHour(value); }
-        public int StartMin { get => _startMin; set => SetStartMin(value); }
-        public int EndHour { get => _endHour; set => SetEndHour(value); }
-        public int EndMin { get => _endMin; set => SetEndMin(value); }
+        public byte Index { get; set; }
+        public byte StartHour { get => _startHour; set => SetStartHour(value); }
+        public byte StartMin { get => _startMin; set => SetStartMin(value); }
+        public byte EndHour { get => _endHour; set => SetEndHour(value); }
+        public byte EndMin { get => _endMin; set => SetEndMin(value); }
 
-        private int _startHour = WaterBoiler.INVALID_VALUE;
-        private int _startMin = WaterBoiler.INVALID_VALUE;
-        private int _endHour = WaterBoiler.INVALID_VALUE;
-        private int _endMin = WaterBoiler.INVALID_VALUE;
-        private XElement? _xElement = null;
+        private byte _startHour = WaterBoiler.INVALID_VALUE;
+        private byte _startMin = WaterBoiler.INVALID_VALUE;
+        private byte _endHour = WaterBoiler.INVALID_VALUE;
+        private byte _endMin = WaterBoiler.INVALID_VALUE;
+        private XElement _xElement = null;
 
 
-        public ElHeatingData(int index)
+        public ElHeatingData(byte index)
         {
             Index = index;
         }
@@ -36,25 +34,25 @@ namespace NSU.Shared.NSUSystemPart
         /* **************************************************************************
          * PRIVATE
          * **************************************************************************/
-        private void SetStartHour(int value)
+        private void SetStartHour(byte value)
         {
             _startHour = value;
             _xElement?.SetAttributeValue(XMLAttrStartHour, _startHour);
         }
 
-        private void SetStartMin(int value)
+        private void SetStartMin(byte value)
         {
             _startMin = value;
             _xElement?.SetAttributeValue(XMLAttrStartMin, _startMin);
         }
 
-        private void SetEndHour(int value)
+        private void SetEndHour(byte value)
         {
             _endHour = value;
             _xElement?.SetAttributeValue(XMLAttrEndHour, _endHour);
         }
 
-        private void SetEndMin(int value)
+        private void SetEndMin(byte value)
         {
             _endMin = value;
             _xElement?.SetAttributeValue(XMLAttrEndMin, _endMin);
@@ -67,7 +65,8 @@ namespace NSU.Shared.NSUSystemPart
         {
             if (xml == null) throw new ArgumentNullException(nameof(xml), "XElement cannot be null.");
 
-            _xElement ??= xml.Elements().FirstOrDefault(item => item.Attribute(XMLAttrIndex)?.Value == Index.ToString());
+            if (_xElement == null)
+                _xElement = xml.Elements().FirstOrDefault(item => item.Attribute(XMLAttrIndex)?.Value == Index.ToString());
 
             if (_xElement != null)
                 ReadXMLNode(_xElement);
@@ -89,11 +88,11 @@ namespace NSU.Shared.NSUSystemPart
         public void ReadXMLNode(XElement xml)
         {
             _xElement = xml;
-            Index = ((int?)_xElement.Attribute(XMLAttrIndex)).GetValueOrDefault(0xFF);
-            _startHour = ((int?)_xElement.Attribute(XMLAttrStartHour)).GetValueOrDefault(0xFF);
-            _startMin = ((int?)_xElement.Attribute(XMLAttrStartMin)).GetValueOrDefault(0xFF);
-            _endHour = ((int?)_xElement.Attribute(XMLAttrEndHour)).GetValueOrDefault(0xFF);
-            _endMin = ((int?)_xElement.Attribute(XMLAttrEndMin)).GetValueOrDefault(0xFF);
+            Index = ((byte?)(int?)_xElement.Attribute(XMLAttrIndex)).GetValueOrDefault(0xFF);
+            _startHour = ((byte?)(int?)_xElement.Attribute(XMLAttrStartHour)).GetValueOrDefault(0xFF);
+            _startMin = ((byte?)(int?)_xElement.Attribute(XMLAttrStartMin)).GetValueOrDefault(0xFF);
+            _endHour = ((byte?)(int?)_xElement.Attribute(XMLAttrEndHour)).GetValueOrDefault(0xFF);
+            _endMin = ((byte?)(int?)_xElement.Attribute(XMLAttrEndMin)).GetValueOrDefault(0xFF);
         }
     }
 }

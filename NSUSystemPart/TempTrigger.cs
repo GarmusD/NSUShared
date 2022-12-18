@@ -15,6 +15,8 @@ namespace NSU.Shared.NSUSystemPart
 
     public class TempTrigger : NSUPartBase, ITempTriggerDataContract
     {
+        public const int MaxTempTriggerPieces = 4;
+
         private const string XMLAttrConfigPos = "cfgpos";
         private const string XMLAttrEnabled = "enabled";
         private const string XMLAttrName = "name";
@@ -22,7 +24,7 @@ namespace NSU.Shared.NSUSystemPart
 
 
         #region Properties
-        public int ConfigPos { get => _cfgPos; set => SetConfigPos(value); }
+        public byte ConfigPos { get => _cfgPos; set => SetConfigPos(value); }
         public bool Enabled { get => _enabled; set => SetEnabled(value); }
         public string Name { get => _name; set => SetName(value); }
         public Status Status { get => _status; set => SetStatus(value); }
@@ -33,12 +35,12 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Private fields
-        private int _cfgPos;
+        private byte _cfgPos;
         private bool _enabled;
         private string _name;
         private Status _status;
         private readonly TempTriggerPiece[] _triggerPieces;
-        private XElement? _xElement;
+        private XElement _xElement;
         #endregion
         
         public TempTrigger()
@@ -48,8 +50,8 @@ namespace NSU.Shared.NSUSystemPart
             _name = string.Empty;
             _status = Status.UNKNOWN;
             _triggerPieces = Enumerable
-                                .Range(0, ITempTriggerDataContract.MAX_TEMPTRIGGERPIECES)
-                                .Select(i => new TempTriggerPiece(i))
+                                .Range(0, MaxTempTriggerPieces)
+                                .Select(i => new TempTriggerPiece((byte)i))
                                 .ToArray();
             _xElement = null;
         }
@@ -61,10 +63,16 @@ namespace NSU.Shared.NSUSystemPart
             _name = dataContract.Name;
             _status = dataContract.Status;
             _triggerPieces = Enumerable
-                                .Range(0, ITempTriggerDataContract.MAX_TEMPTRIGGERPIECES)
-                                .Select(i => new TempTriggerPiece(i))
+                                .Range(0, MaxTempTriggerPieces)
+                                .Select(i => new TempTriggerPiece((byte)i) 
+                                {
+                                    Enabled = dataContract.TempTriggerPieces[i].Enabled,
+                                    TSensorName = dataContract.TempTriggerPieces[i].TSensorName,
+                                    Condition = dataContract.TempTriggerPieces[i].Condition,
+                                    Temperature = dataContract.TempTriggerPieces[i].Temperature,
+                                    Histeresis = dataContract.TempTriggerPieces[i].Histeresis,
+                                })
                                 .ToArray();
-            dataContract.TempTriggerPieces.CopyTo(_triggerPieces, 0);
             _xElement = null;
         }
 
@@ -72,7 +80,7 @@ namespace NSU.Shared.NSUSystemPart
         /*************************************************************************
          * PRIVATE
          * ***********************************************************************/
-        private void SetConfigPos(int value)
+        private void SetConfigPos(byte value)
         {
             _cfgPos = value;
             _xElement?.SetAttributeValue(XMLAttrConfigPos, _cfgPos);
@@ -134,7 +142,7 @@ namespace NSU.Shared.NSUSystemPart
         public override void ReadXMLNode(XElement xml)
         {
             _xElement = xml;
-            _cfgPos = ((int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(INVALID_VALUE);
+            _cfgPos = ((byte?)(int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(INVALID_VALUE);
             _enabled = ((bool?)_xElement.Attribute(XMLAttrEnabled)).GetValueOrDefault(false);
             _name = (string)_xElement.Attribute(XMLAttrName) ?? string.Empty;
             _status = Utils.GetStatusFromString(_xElement.Attribute(XMLAttrStatus)?.Value, Status.UNKNOWN);

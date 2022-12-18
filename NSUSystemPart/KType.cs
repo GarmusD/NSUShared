@@ -19,7 +19,7 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Properties
-        public int ConfigPos { get => _cfgPos; set => SetConfigPos(value); }
+        public byte ConfigPos { get => _cfgPos; set => SetConfigPos(value); }
         public bool Enabled { get => _enabled; set => SetEnabled(value); }
         public string Name { get => _name; set => SetName(value); }
         public int Interval { get => _interval; set => SetInterval(value); }
@@ -27,12 +27,12 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Private fields
-        private int _cfgPos;
+        private byte _cfgPos;
         private bool _enabled;
         private string _name;
         private int _interval;
         private int _temp;
-        private XElement? _xElement = null;
+        private XElement _xElement = null;
         #endregion
 
         public KType()
@@ -54,7 +54,7 @@ namespace NSU.Shared.NSUSystemPart
         }
 
         #region Private methods
-        private void SetConfigPos(int value)
+        private void SetConfigPos(byte value)
         {
             _cfgPos = value;
             _xElement?.SetAttributeValue(XMLAttrConfigPos, _cfgPos);
@@ -124,7 +124,7 @@ namespace NSU.Shared.NSUSystemPart
             _name = (string)_xElement.Attribute(XMLAttrName);
             _interval = ((int?)_xElement.Attribute(XMLAttrInterval)).GetValueOrDefault(0);
             _temp = ((int?)_xElement.Attribute(XMLAttrTemperature)).GetValueOrDefault(0);
-            _cfgPos = ((int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(INVALID_VALUE);
+            _cfgPos = ((byte?)(int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(INVALID_VALUE);
         }
         #endregion
     }

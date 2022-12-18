@@ -64,7 +64,7 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Properties
-        public int ConfigPos { get => _cfgPos; set => SetConfigPos(value); }
+        public byte ConfigPos { get => _cfgPos; set => SetConfigPos(value); }
         public bool Enabled { get => _enabled; set => SetEnabled(value); }
         public string Name { get => _name; set => SetName(value); }
         public byte[] SensorID { get; set; }
@@ -75,14 +75,14 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Private fields
-        private int _cfgPos;
-        private bool _enabled;
-        private string _name;
-        private int _interval;
-        private double _temperature;
-        private bool _notFound;
-        private int _readErrorCount;
-        private XElement? _xElement = null;
+        private byte _cfgPos = 0xFF;
+        private bool _enabled = default;
+        private string _name = default;
+        private int _interval = default;
+        private double _temperature = default;
+        private bool _notFound = default;
+        private int _readErrorCount = default;
+        private XElement _xElement = null;
         #endregion
 
 
@@ -108,7 +108,7 @@ namespace NSU.Shared.NSUSystemPart
          * PRIVATE METHODS
          * 
          ************************************************************************/
-        private void SetConfigPos(int value)
+        private void SetConfigPos(byte value)
         {
             _cfgPos = value;
             _xElement?.SetAttributeValue(XMLAttrConfigPos, _cfgPos);
@@ -220,7 +220,7 @@ namespace NSU.Shared.NSUSystemPart
             _name = (string)_xElement.Attribute(XMLAttrName);
             _interval = ((int?)_xElement.Attribute(XMLAttrInterval)).GetValueOrDefault(0);
             _temperature = ((double?)_xElement.Attribute(XMLAttrTemperature)).GetValueOrDefault(0);
-            _cfgPos = ((int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(INVALID_VALUE);
+            _cfgPos = ((byte?)(int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(INVALID_VALUE);
             _notFound = ((bool?)_xElement.Attribute(XMLAttrNotFound)).GetValueOrDefault(false);
             _readErrorCount = ((int?)_xElement.Attribute(XMLAttrErrors)).GetValueOrDefault(0);
         }

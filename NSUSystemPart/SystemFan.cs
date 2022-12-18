@@ -20,7 +20,7 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Properties
-        public int ConfigPos { get => _cfgPos; set => SetConfigPos(value); }
+        public byte ConfigPos { get => _cfgPos; set => SetConfigPos(value); }
         public bool Enabled { get => _enabled; set => SetEnabled(value); }
         public string Name { get => _name; set => SetName(value); }
         public string TempSensorName { get => _tsName; set => SetTempSensorName(value); }
@@ -30,14 +30,14 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Private fields
-        private int _cfgPos;
+        private byte _cfgPos;
         private bool _enabled;
         private string _name;
         private string _tsName;
         private double _minTemp;
         private double _maxTemp;
         private int _currentPWM;
-        XElement? _xElement;
+        XElement _xElement;
         #endregion
         
 
@@ -70,7 +70,7 @@ namespace NSU.Shared.NSUSystemPart
         /// ConfigPos
         /// </summary>
         /// <param name="value">ConfigPos in MCU settings file</param>
-        private void SetConfigPos(int value)
+        private void SetConfigPos(byte value)
         {
             _cfgPos = value;
             _xElement?.SetAttributeValue(XMLAttrConfigPos, _cfgPos);
@@ -147,7 +147,7 @@ namespace NSU.Shared.NSUSystemPart
         override public void ReadXMLNode(XElement xml)
         {
             _xElement = xml;
-            _cfgPos = ((int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(0xFF);
+            _cfgPos = ((byte?)(int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(0xFF);
             _enabled = ((bool?)_xElement.Attribute(XMLAttrEnabled)).GetValueOrDefault(false);
             _name = (string)_xElement.Attribute(XMLAttrName);
             _tsName = (string)_xElement.Attribute(XMLAttrTempSensorName);

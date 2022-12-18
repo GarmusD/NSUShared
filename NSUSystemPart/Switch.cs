@@ -20,14 +20,13 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Events
-        public event EventHandler<EventArgs>? Clicked;
+        public event EventHandler<EventArgs> Clicked;
         #endregion
-
 
         #region Properties
         public bool Enabled { get => _enabled; set => SetEnabled(value); }
         public string Name { get => _name; set => SetName(value); }
-        public int ConfigPos { get => _cfgpos; set => SetConfigPos(value); }
+        public byte ConfigPos { get => _cfgpos; set => SetConfigPos(value); }
         public string Dependancy { get => _depend; set => SetDependName(value); }
         public Status Status { get => _status; set => SetStatus(value); }
         public Status OnDependancyStatus { get => _onDependancyStatus; set => SetOnDependancyStatus(value); }
@@ -38,13 +37,13 @@ namespace NSU.Shared.NSUSystemPart
         #region Private field
         private bool _enabled;
         private string _name;
-        private int _cfgpos;
+        private byte _cfgpos;
         private string _depend;
         private Status _status;
         private Status _onDependancyStatus;
         private Status _forceStatus;
         private bool _isForced;
-        private XElement? _xElement;
+        private XElement _xElement;
         #endregion
 
         
@@ -75,7 +74,7 @@ namespace NSU.Shared.NSUSystemPart
         }
 
         #region Private methods
-        private void SetConfigPos(int value)
+        private void SetConfigPos(byte value)
         {
             _cfgpos = value;
             _xElement?.SetAttributeValue(XMLAttrConfigPos, _cfgpos);
@@ -175,7 +174,7 @@ namespace NSU.Shared.NSUSystemPart
             _xElement = xml;
             _enabled = ((bool?)_xElement.Attribute(XMLAttrEnabled)).GetValueOrDefault(false);
             _name = (string)_xElement.Attribute(XMLAttrName);
-            _cfgpos = ((int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(INVALID_VALUE);
+            _cfgpos = ((byte?)(int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(INVALID_VALUE);
             _depend = (string)_xElement.Attribute(XMLAttrDependName);
             _status = NSUUtils.Utils.GetStatusFromString(_xElement.Attribute(XMLAttrStatus)?.Value, Status.UNKNOWN);
             _onDependancyStatus = NSUUtils.Utils.GetStatusFromString(_xElement.Attribute(XMLAttrOnDepStatus)?.Value, Status.UNKNOWN);

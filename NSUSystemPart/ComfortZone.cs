@@ -31,7 +31,7 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Properties
-        public int ConfigPos { get => _cfgPos; set => SetConfigPos(value); }
+        public byte ConfigPos { get => _cfgPos; set => SetConfigPos(value); }
         public bool Enabled { get => _enabled; set => SetEnabled(value); }
         public string Name { get => _name; set => SetName(value); }
         public string Title { get => GetTitle(); set => SetTitle(value); }
@@ -51,7 +51,7 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Private fields
-        private int _cfgPos;
+        private byte _cfgPos;
         private bool _enabled;
         private string _name;
         private string _title;
@@ -114,7 +114,7 @@ namespace NSU.Shared.NSUSystemPart
         }
 
         #region Private methods
-        private void SetConfigPos(int value)
+        private void SetConfigPos(byte value)
         {
             _cfgPos = value;
             _xElement?.SetAttributeValue(XMLAttrConfigPos, _cfgPos);
@@ -281,7 +281,7 @@ namespace NSU.Shared.NSUSystemPart
         {
             _xElement = xml;
 
-            _cfgPos = ((int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(0xFF);
+            _cfgPos = ((byte?)(int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(0xFF);
             _enabled = ((bool?)_xElement.Attribute(XMLAttrEnabled)).GetValueOrDefault(false);
             _name = (string)_xElement.Attribute(XMLAttrName);
             _title = (string)_xElement.Attribute(XMLAttrTitle);

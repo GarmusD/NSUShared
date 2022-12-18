@@ -17,7 +17,7 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Properties
-        public int Index { get => _idx; set => SetIndex(value); }
+        public byte Index { get => _idx; set => SetIndex(value); }
         public bool Enabled { get => _enabled; set => SetEnabled(value); }
         public string TSensorName { get => _tsName; set => SetTSName(value); }
         public TriggerCondition Condition { get => _condition; set => SetCondition(value); }
@@ -26,17 +26,17 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Private fields
-        private int _idx;
+        private byte _idx;
         private bool _enabled;
         private string _tsName;
         private TriggerCondition _condition;
         private double _temp;
         private double _histeresis;
-        private XElement? _xElement = null;
+        private XElement _xElement = null;
         #endregion
 
 
-        public TempTriggerPiece(int index)
+        public TempTriggerPiece(byte index)
         {
             _idx = index;
             _enabled = false;
@@ -50,7 +50,7 @@ namespace NSU.Shared.NSUSystemPart
         /*******************************************************************
          * PRIVATE
          * *****************************************************************/
-        private void SetIndex(int value)
+        private void SetIndex(byte value)
         {
             _idx = value;
             _xElement?.SetAttributeValue(XMLAttrIndex, _idx);
@@ -120,7 +120,7 @@ namespace NSU.Shared.NSUSystemPart
         public void ReadXMLNode(XElement xml)
         {
             _xElement = xml;
-            _idx = ((int?)_xElement.Attribute(XMLAttrIndex)).GetValueOrDefault(TempTrigger.INVALID_VALUE);
+            _idx = ((byte?)(int?)_xElement.Attribute(XMLAttrIndex)).GetValueOrDefault(TempTrigger.INVALID_VALUE);
             _enabled = ((bool?)_xElement.Attribute(XMLAttrEnabled)).GetValueOrDefault(false);
             _tsName = (string)_xElement.Attribute(XMLAttrTempSensorName) ?? string.Empty;
             if (_xElement.Attribute(XMLAttrTriggerCondition) != null)

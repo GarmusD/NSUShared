@@ -2,7 +2,6 @@ using System;
 using System.Xml.Linq;
 using System.Linq;
 using NSU.Shared.DataContracts;
-using System.ComponentModel;
 
 namespace NSU.Shared.NSUSystemPart
 {
@@ -23,39 +22,39 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Events
-        public event EventHandler<EventArgs>? Clicked;
+        public event EventHandler<EventArgs> Clicked;
         //public event EventHandler<StatusChangedEventArgs>? StatusChanged;
         #endregion
 
         #region Properties
-        public int ConfigPos { get => _cfgpos; set => SetConfigPos(value); }
+        public byte ConfigPos { get => _cfgpos; set => SetConfigPos(value); }
         public bool Enabled { get => _enabled; set => SetEnabled(value); }
         public string Name { get => _name; set => SetName(value); }
         public string TempTriggerName { get => _tempTriggerName; set => SetTriggerName(value); }
-        public int CurrentSpeed { get => _currSpeed; set => SetCurrentSpeed(value); }
-        public int MaxSpeed { get => _maxSpeed; set => SetMaxSpeed(value); }
-        public int Spd1Channel { get => _spd1Channel; set => SetSpd1Channel(value); }
-        public int Spd2Channel { get => _spd2Channel; set => SetSpd2Channel(value); }
-        public int Spd3Channel { get => _spd3Channel; set => SetSpd3Channel(value); }
+        public byte CurrentSpeed { get => _currSpeed; set => SetCurrentSpeed(value); }
+        public byte MaxSpeed { get => _maxSpeed; set => SetMaxSpeed(value); }
+        public byte Spd1Channel { get => _spd1Channel; set => SetSpd1Channel(value); }
+        public byte Spd2Channel { get => _spd2Channel; set => SetSpd2Channel(value); }
+        public byte Spd3Channel { get => _spd3Channel; set => SetSpd3Channel(value); }
         public Status Status { get => _status; set => SetStatus(value); }
         public int OpenedValvesCount { get => _openedValvesCount; set => SetOpenedValvesCount(value); }
         #endregion
 
         #region Private fields
-        private int _cfgpos;
+        private byte _cfgpos;
         private bool _enabled;
         private string _name;
         private string _tempTriggerName;
-        private int _currSpeed;
-        private int _maxSpeed;
-        private int _spd1Channel;
-        private int _spd2Channel;
-        private int _spd3Channel;
+        private byte _currSpeed;
+        private byte _maxSpeed;
+        private byte _spd1Channel;
+        private byte _spd2Channel;
+        private byte _spd3Channel;
         private Status _status;
         private int _openedValvesCount;
         private bool _pendingChange = false;
 
-        private XElement? _xElement = null;
+        private XElement _xElement = null;
         #endregion
 
 
@@ -91,7 +90,7 @@ namespace NSU.Shared.NSUSystemPart
         }
 
         #region Private Methods
-        private void SetConfigPos(int value)
+        private void SetConfigPos(byte value)
         {
             _cfgpos = value;
             _xElement?.SetAttributeValue(XMLAttrConfigPos, _cfgpos);
@@ -118,32 +117,32 @@ namespace NSU.Shared.NSUSystemPart
             _xElement?.SetAttributeValue(XMLAttrTriggerName, _tempTriggerName);
         }
 
-        private void SetCurrentSpeed(int value)
+        private void SetCurrentSpeed(byte value)
         {
             _currSpeed = value;
             _pendingChange = true;
             _xElement?.SetAttributeValue(XMLAttrCurrSpeed, _currSpeed);
         }
 
-        private void SetMaxSpeed(int value)
+        private void SetMaxSpeed(byte value)
         {
             _maxSpeed = value;
             _xElement?.SetAttributeValue(XMLAttrMaxSpeed, _maxSpeed);
         }
 
-        private void SetSpd1Channel(int value)
+        private void SetSpd1Channel(byte value)
         {
             _spd1Channel = value;
             _xElement?.SetAttributeValue(XMLAttrSpd1Channel, _spd1Channel);
         }
 
-        private void SetSpd2Channel(int value)
+        private void SetSpd2Channel(byte value)
         {
             _spd2Channel = value;
             _xElement?.SetAttributeValue(XMLAttrSpd2Channel, _spd2Channel);
         }
 
-        private void SetSpd3Channel(int value)
+        private void SetSpd3Channel(byte value)
         {
             _spd3Channel = value;
             _xElement?.SetAttributeValue(XMLAttrSpd3Channel, _spd3Channel);
@@ -217,15 +216,15 @@ namespace NSU.Shared.NSUSystemPart
         override public void ReadXMLNode(XElement xml)
         {
             _xElement = xml;
-            _cfgpos = ((int?)(int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(INVALID_VALUE);
+            _cfgpos = ((byte?)(int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(INVALID_VALUE);
             _enabled = ((bool?)_xElement.Attribute(XMLAttrEnabled)).GetValueOrDefault(false);
             _name = (string)_xElement.Attribute(XMLAttrName);
             _tempTriggerName = (string)_xElement.Attribute(XMLAttrTriggerName);
-            _currSpeed = ((int?)(int?)_xElement.Attribute(XMLAttrCurrSpeed)).GetValueOrDefault(0);
-            _maxSpeed = ((int?)(int?)_xElement.Attribute(XMLAttrMaxSpeed)).GetValueOrDefault(1);
-            _spd1Channel = ((int?)(int?)_xElement.Attribute(XMLAttrSpd1Channel)).GetValueOrDefault(INVALID_VALUE);
-            _spd2Channel = ((int?)(int?)_xElement.Attribute(XMLAttrSpd2Channel)).GetValueOrDefault(INVALID_VALUE);
-            _spd3Channel = ((int?)(int?)_xElement.Attribute(XMLAttrSpd3Channel)).GetValueOrDefault(INVALID_VALUE);
+            _currSpeed = ((byte?)(int?)_xElement.Attribute(XMLAttrCurrSpeed)).GetValueOrDefault(0);
+            _maxSpeed = ((byte?)(int?)_xElement.Attribute(XMLAttrMaxSpeed)).GetValueOrDefault(1);
+            _spd1Channel = ((byte?)(int?)_xElement.Attribute(XMLAttrSpd1Channel)).GetValueOrDefault(INVALID_VALUE);
+            _spd2Channel = ((byte?)(int?)_xElement.Attribute(XMLAttrSpd2Channel)).GetValueOrDefault(INVALID_VALUE);
+            _spd3Channel = ((byte?)(int?)_xElement.Attribute(XMLAttrSpd3Channel)).GetValueOrDefault(INVALID_VALUE);
             _status = ((Status?)(int?)_xElement.Attribute(XMLAttrStatus)).GetValueOrDefault(Status.OFF);
             _openedValvesCount = ((int?)(int?)_xElement.Attribute(XMLAttrOpenedValvesCount)).GetValueOrDefault(0);
         }

@@ -8,6 +8,8 @@ namespace NSU.Shared.NSUSystemPart
     public class Collector : NSUPartBase, ICollectorDataContract
     {
         #region Constants
+        public const int MaxCollectorActuators = 16;
+
         const string XMLAttrEnabled = "enabled";
         const string XMLAttrName = "name";
         const string XMLAttrConfigPos = "cfgpos";
@@ -16,22 +18,27 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Properties
-        public int ConfigPos { get => _cfgPos; set => SetConfigPos(value); }
+        public byte ConfigPos { get => _cfgPos; set => SetConfigPos(value); }
         public bool Enabled { get => _enabled; set => SetEnabled(value); }
         public string Name { get => _name; set => SetName(value); }
         public string CircPumpName { get => _circPumpName; set => SetCircPumpName(value); }
-        public int ActuatorsCount => ICollectorDataContract.MAX_COLLECTOR_ACTUATORS;
+        public int ActuatorsCount => MaxCollectorActuators;
         public IThermoActuatorDataContract[] Actuators { get => _actuators; }
         #endregion
 
         #region Private fields
-        private int _cfgPos = INVALID_VALUE;
+        private byte _cfgPos = INVALID_VALUE;
         private bool _enabled = false;
         private string _name = string.Empty;
         private string _circPumpName = string.Empty;
-        private ThermoActuator[] _actuators = new ThermoActuator[ICollectorDataContract.MAX_COLLECTOR_ACTUATORS];
-        private XElement? _xElement = null;
+        private readonly ThermoActuator[] _actuators = Enumerable.Range(0, MaxCollectorActuators).Select((i) => { return new ThermoActuator((byte)i); }).ToArray();
+        private XElement _xElement = null;
         #endregion
+
+        public Collector()
+        {
+
+        }
 
         public Collector(ICollectorDataContract dataContract)
         {
@@ -39,7 +46,6 @@ namespace NSU.Shared.NSUSystemPart
             _enabled = dataContract.Enabled;
             _name = dataContract.Name;
             _circPumpName = dataContract.CircPumpName;
-            CreateDefaultActuators();
             foreach (var actuator in dataContract.Actuators)
             {
                 _actuators[actuator.Index].Type = actuator.Type;
@@ -48,17 +54,9 @@ namespace NSU.Shared.NSUSystemPart
             }
         }
 
-        private void CreateDefaultActuators()
-        {
-            _actuators = Enumerable
-                .Range(0, ICollectorDataContract.MAX_COLLECTOR_ACTUATORS)
-                .Select((n) => { return new ThermoActuator(n); })
-                .ToArray();
-        }
-
         #region Private methods
 
-        private void SetConfigPos(int value)
+        private void SetConfigPos(byte value)
         {
             if (_cfgPos != value)
             {
@@ -143,7 +141,7 @@ namespace NSU.Shared.NSUSystemPart
         override public void ReadXMLNode(XElement xml)
         {
             _xElement = xml;
-            _cfgPos = ((int?)(int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(INVALID_VALUE);
+            _cfgPos = ((byte?)(int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(INVALID_VALUE);
             _enabled = ((bool?)_xElement.Attribute(XMLAttrEnabled)).GetValueOrDefault(false);
             _name = (string)_xElement.Attribute(XMLAttrName);
             _circPumpName = (string)_xElement.Attribute(XMLAttrCircPumpName);

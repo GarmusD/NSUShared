@@ -1,8 +1,6 @@
 ﻿using NSU.Shared.DataContracts;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 
 namespace NSU.Shared.NSUSystemPart
@@ -23,21 +21,21 @@ namespace NSU.Shared.NSUSystemPart
         #endregion        
 
         #region Properties
-        public int Index { get; set; }
+        public byte Index { get; set; }
         public ActuatorType Type { get => _type; set => SetType(value); }
-        public int RelayChannel { get => _relayChannel; set => SetRelayChannel(value); }
+        public byte RelayChannel { get => _relayChannel; set => SetRelayChannel(value); }
         public bool? Opened { get => _opened; set => SetOpened(value); }
         #endregion
 
         #region Private fields
         private bool? _opened = false;
         private ActuatorType _type = ActuatorType.NC;
-        private int _relayChannel = NSUPartBase.INVALID_VALUE;
+        private byte _relayChannel = NSUPartBase.INVALID_VALUE;
         private XElement? _xElement = null;
         #endregion
 
 
-        public ThermoActuator(int idx)
+        public ThermoActuator(byte idx)
         {
             Index = idx;
         }
@@ -50,7 +48,7 @@ namespace NSU.Shared.NSUSystemPart
             _xElement?.SetAttributeValue(XMLAttrType, _type);
         }
 
-        private void SetRelayChannel(int value)
+        private void SetRelayChannel(byte value)
         {
             _relayChannel = value;
             _xElement?.SetAttributeValue(XMLAttrRelayChannel, _relayChannel);
@@ -92,7 +90,7 @@ namespace NSU.Shared.NSUSystemPart
         {
             _xElement = xml;
             _type = ((ActuatorType?)(int?)_xElement.Attribute(XMLAttrType)).GetValueOrDefault(ActuatorType.NC);
-            _relayChannel = ((int?)(int?)_xElement.Attribute(XMLAttrRelayChannel)).GetValueOrDefault(Collector.INVALID_VALUE);
+            _relayChannel = ((byte?)(int?)(int?)_xElement.Attribute(XMLAttrRelayChannel)).GetValueOrDefault(Collector.INVALID_VALUE);
             _opened = ((bool?)_xElement.Attribute(XMLAttrOpened)).GetValueOrDefault(false);
         }
 

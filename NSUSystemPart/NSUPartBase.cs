@@ -10,7 +10,7 @@ namespace NSU.Shared.NSUSystemPart
     {
         public const byte INVALID_VALUE = 0xFF;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
         {

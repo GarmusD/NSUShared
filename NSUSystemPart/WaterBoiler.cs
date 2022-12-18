@@ -1,9 +1,7 @@
 ﻿using NSU.Shared.DataContracts;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Xml.Linq;
 
 namespace NSU.Shared.NSUSystemPart
@@ -11,7 +9,7 @@ namespace NSU.Shared.NSUSystemPart
     public class WaterBoiler : NSUPartBase, IWaterBoilerDataContract
     {
         #region Constants
-        
+        public const int MAX_WATERBOILER_EL_HEATING_COUNT = 7;
 
         private const string XMLAttrName = "name";
         private const string XMLAttrConfigPos = "cfgpos";
@@ -24,7 +22,7 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Properties
-        public int ConfigPos { get => _cfgPos; set => SetConfigPos(value); }
+        public byte ConfigPos { get => _cfgPos; set => SetConfigPos(value); }
         public bool Enabled { get => _enabled; set => SetEnabled(value); }
         public string Name { get => _name; set => SetName(value); }
         public string TempSensorName { get => _tsName; set => SetTempSensorName(value); }
@@ -39,7 +37,7 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Private fields
-        private int _cfgPos = INVALID_VALUE;
+        private byte _cfgPos = INVALID_VALUE;
         private bool _enabled = false;
         private string _name = string.Empty;
         private string _tsName = string.Empty;
@@ -47,13 +45,14 @@ namespace NSU.Shared.NSUSystemPart
         private string _cpName = string.Empty;
         private bool _elHeatingEnabled = false;
         private int _elHeatingChannel = INVALID_VALUE;
-        private readonly ElHeatingData[] _heatingData = new ElHeatingData[IWaterBoilerDataContract.MAX_WATERBOILER_EL_HEATING_COUNT];
-        XElement? _xElement = null;
+        private readonly ElHeatingData[] _heatingData;
+        private XElement _xElement = null;
         #endregion
 
 
         public WaterBoiler()
         {
+            _heatingData = Enumerable.Range(0, MAX_WATERBOILER_EL_HEATING_COUNT).Select((i) => new ElHeatingData((byte)i)).ToArray();
         }
 
         public WaterBoiler(IWaterBoilerDataContract dataContract)
@@ -66,14 +65,20 @@ namespace NSU.Shared.NSUSystemPart
             _cpName = dataContract.CircPumpName;
             _elHeatingEnabled = dataContract.ElHeatingEnabled;
             _elHeatingChannel = dataContract.ElHeatingChannel;
-            dataContract.ElHeatingData.CopyTo(_heatingData, 0);
+            _heatingData = Enumerable.Range(0, MAX_WATERBOILER_EL_HEATING_COUNT).Select((i) => new ElHeatingData((byte)i) 
+            {
+                StartHour = dataContract.ElHeatingData[i].StartHour,
+                StartMin = dataContract.ElHeatingData[i].StartMin,
+                EndHour = dataContract.ElHeatingData[i].EndHour,
+                EndMin = dataContract.ElHeatingData[i].EndMin
+            }).ToArray();
         }
 
         #region Private methods
         /* **************************************************************************
          * PRIVATE
          * **************************************************************************/
-        private void SetConfigPos(int value)
+        private void SetConfigPos(byte value)
         {
             _cfgPos = value;
             _xElement?.SetAttributeValue(XMLAttrConfigPos, _cfgPos);
@@ -139,7 +144,7 @@ namespace NSU.Shared.NSUSystemPart
             if (_xElement == null && !string.IsNullOrWhiteSpace(_name))
                 _xElement = xml.Elements().FirstOrDefault(item => item.Attribute(XMLAttrName)?.Value == _name);
             
-            if (_xElement == null)
+            if (_xElement != null)
                 ReadXMLNode(_xElement);
             else
                 CreateNodeDefaults(xml);
@@ -163,7 +168,7 @@ namespace NSU.Shared.NSUSystemPart
         public override void ReadXMLNode(XElement xml)
         {
             _xElement = xml;
-            _cfgPos = ((int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(INVALID_VALUE);
+            _cfgPos = ((byte?)(int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(INVALID_VALUE);
             _enabled = ((bool?)_xElement.Attribute(XMLAttrEnabled)).GetValueOrDefault(false);
             _name = (string)_xElement.Attribute(XMLAttrName) ?? string.Empty;
             _tsName = (string)_xElement.Attribute(XMLAttrTempSensorName) ?? string.Empty;

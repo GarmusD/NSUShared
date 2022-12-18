@@ -48,10 +48,10 @@ namespace NSU.Shared.NSUSystemPart
         private const string XMLAttrWoodBoilerTempStatus = "tempStatus";
         private const string XMLAttrCurrentTemp = "currentTemp";
 
-        public event EventHandler<SwitchStateChangedEventArgs>? SwitchStateChanged;
-        public event EventHandler<NSUActionEventArgs>? Action;
+        public event EventHandler<SwitchStateChangedEventArgs> SwitchStateChanged;
+        public event EventHandler<NSUActionEventArgs> Action;
 
-        public int ConfigPos { get => _cfgPos; set => SetConfigPos(value); }
+        public byte ConfigPos { get => _cfgPos; set => SetConfigPos(value); }
         public bool Enabled { get => _enabled; set => SetEnabled(value); }
         public string Name { get => _name; set => SetName(value); }
         public string TSensorName { get => _tSensorName; set => SetTSensorName(value); }
@@ -72,7 +72,7 @@ namespace NSU.Shared.NSUSystemPart
         public string WaterBoilerName { get => _wtrBName; set => SetWaterBoilerName(value); }
 
 
-        private int _cfgPos;
+        private byte _cfgPos;
         private bool _enabled;
         private string _name;
         private string _tSensorName;
@@ -91,11 +91,11 @@ namespace NSU.Shared.NSUSystemPart
         private WoodBoilerTempStatus _tempStatus;
         private double _currentTemp;
         private string _wtrBName;
-        private XElement? _xElement;
+        private XElement _xElement;
 
         public WoodBoiler()
         {
-            _cfgPos = 255;
+            _cfgPos = 0xFF;
             _enabled = false;
             _name = string.Empty;
             _tSensorName = string.Empty;
@@ -140,7 +140,7 @@ namespace NSU.Shared.NSUSystemPart
             _currentTemp = dataContract.CurrentTemp;
         }
 
-        private void SetConfigPos(int value)
+        private void SetConfigPos(byte value)
         {
             _cfgPos = value;
             _xElement?.SetAttributeValue(XMLAttrConfigPos, _cfgPos);
@@ -350,7 +350,7 @@ namespace NSU.Shared.NSUSystemPart
         {
             _xElement = xml ?? throw new ArgumentNullException();
 
-            _cfgPos = ((int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(0xFF);
+            _cfgPos = ((byte?)(int?)_xElement.Attribute(XMLAttrConfigPos)).GetValueOrDefault(0xFF);
             _enabled = ((bool?)_xElement.Attribute(XMLAttrEnabled)).GetValueOrDefault(false);
             _name = (string)_xElement.Attribute(XMLAttrName) ?? string.Empty;
             _tSensorName = (string)_xElement.Attribute(XMLAttrTempSensorName) ?? string.Empty;

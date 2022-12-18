@@ -1,9 +1,6 @@
 ﻿using NSU.Shared.DataContracts;
-using NSUWatcher.Interfaces.MCUCommands.From;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Xml.Linq;
 
 namespace NSU.Shared.NSUSystemPart
@@ -11,6 +8,9 @@ namespace NSU.Shared.NSUSystemPart
     public class RelayModule : NSUPartBase, IRelayModuleDataContract
     {
         #region Constants
+        public const int CHANNELS_PER_MODULE = 8;
+        public const int MAX_RELAY_MODULES = 5;
+
         private const string XMLAttrConfigPos = "cfgpos";
         private const string XMLAttrEnabled = "enabled";
         private const string XMLAttrActiveLow = "activelow";
@@ -34,7 +34,7 @@ namespace NSU.Shared.NSUSystemPart
         private bool _reversed;
         private byte _flags;
         private byte _lockFlags;
-        XElement? _xElement = null;
+        XElement _xElement = null;
         #endregion
         
         
@@ -102,12 +102,12 @@ namespace NSU.Shared.NSUSystemPart
         #endregion
 
         #region Public methods
-        public void SetStatus(IRelayModuleStatus status)
+        public void SetStatus(byte statusFlags, byte lockFlags)
         {
-            if(_flags != status.StatusFlags || _lockFlags != status.LockFlags)
+            if(_flags != statusFlags || _lockFlags != lockFlags)
             {
-                _flags = status.StatusFlags;
-                _lockFlags = status.LockFlags;
+                _flags = statusFlags;
+                _lockFlags = lockFlags;
                 OnPropertyChanged(nameof(StatusFlags));
             }
         }
