@@ -28,10 +28,10 @@ namespace NSU.Shared.DTO.ExtCommandContent
 
 		public CollectorUpdateContent(byte configPos, bool enabled, string name, string circPumpName, byte actuatorsCount, params Actuator[] actuators)
 		{
-            if (actuators.Length > ICollectorDataContract.MAX_COLLECTOR_ACTUATORS)
-                throw new ArgumentOutOfRangeException(nameof(actuators), $"Count of actuators [{actuators.Length}] exceeds maximum value [{ICollectorDataContract.MAX_COLLECTOR_ACTUATORS}].");
+            if (actuators.Length > Collector.MaxCollectorActuators)
+                throw new ArgumentOutOfRangeException(nameof(actuators), $"Count of actuators [{actuators.Length}] exceeds maximum value [{Collector.MaxCollectorActuators}].");
 
-            Actuators = Enumerable.Range(0, ICollectorDataContract.MAX_COLLECTOR_ACTUATORS).Select(_ => new Actuator(ActuatorType.NC, 0xFF)).ToArray();
+            Actuators = Enumerable.Range(0, Collector.MaxCollectorActuators).Select(_ => new Actuator(ActuatorType.NC, 0xFF)).ToArray();
 			ConfigPos = configPos;
 			Enabled = enabled;
 			Name = name;

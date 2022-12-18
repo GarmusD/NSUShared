@@ -14,12 +14,12 @@ namespace NSU.Shared.DTO.ExtCommandContent
 
         public TempTriggerSetupContent(byte configPos, bool enabled, string name, params TriggerPiece[] triggerPieces)
         {
-            if (triggerPieces.Length > ITempTriggerDataContract.MAX_TEMPTRIGGERPIECES)
+            if (triggerPieces.Length > TempTrigger.MaxTempTriggerPieces)
                 throw new ArgumentOutOfRangeException(nameof(triggerPieces), "Contains too much TempTriggerPiece's.");
             ConfigPos = configPos;
             Enabled = enabled;
             Name = name;
-            TriggerPieces = Enumerable.Range(0, ITempTriggerDataContract.MAX_TEMPTRIGGERPIECES).Select(_ => new TriggerPiece()).ToArray();
+            TriggerPieces = Enumerable.Range(0, TempTrigger.MaxTempTriggerPieces).Select(_ => new TriggerPiece()).ToArray();
             int idx = 0;
             foreach (var item in triggerPieces)
             {
