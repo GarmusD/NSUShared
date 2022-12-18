@@ -196,6 +196,7 @@
             public const string Reversed = "reversed";
             public const string StatusFlags = "sflags";
             public const string LockFlags = "lflags";
+            public const string IsLocked = "locked";
         }
 
         public static class KType
