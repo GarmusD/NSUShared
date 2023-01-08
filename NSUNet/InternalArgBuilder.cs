@@ -6,6 +6,7 @@ using System.Text;
 
 namespace NSU.Shared.NSUNet
 {
+#nullable enable
     public enum NetDataType
     {
         Unknown,
@@ -42,7 +43,7 @@ namespace NSU.Shared.NSUNet
     {
         const int HeaderSize = sizeof(byte) + sizeof(int);
         
-        public event EventHandler<DataAvailableEventArgs> DataAvailable;
+        public event EventHandler<DataAvailableEventArgs>? DataAvailable;
         byte[] buff = new byte[0];
 
         private bool ValidateDataType(int value)
@@ -131,10 +132,9 @@ namespace NSU.Shared.NSUNet
 
     public class InternalArgBuilder
     {
-        readonly string LogTag = "NetServer.InternalDataReceivedArgs";
         const int HeaderSize = sizeof(byte) + sizeof(int);
         readonly Buffer buffer;
-        byte[] intBuff;
+        byte[]? intBuff;
         int partDataPos;
         readonly Queue<InternalArgs> queue = new Queue<InternalArgs>();
         public bool DataAvailable => queue.Any();
@@ -151,7 +151,7 @@ namespace NSU.Shared.NSUNet
             NetDataType dt = (NetDataType)e.Data[idx++];
             int dataLength = BitConverter.ToInt32(e.Data, idx);
             idx += sizeof(int);
-            byte[] buff;
+            byte[]? buff;
             switch (dt)
             {
                 case NetDataType.PartialInit:                    

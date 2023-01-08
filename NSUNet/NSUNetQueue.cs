@@ -78,23 +78,30 @@ namespace NSU.Shared.NSUNet
         public void CheckCommand()
         {
             _logger.Debug("CheckCommand()");
-            if (_current == null && _queue.Count > 0 && string.IsNullOrEmpty(_currentCmdID))
+            try
             {
-                _current = _queue.Dequeue();
-                if (_current.Property(JKeys.Generic.CommandID) != null &&
-                    !string.IsNullOrWhiteSpace((string)_current[JKeys.Generic.CommandID]) &&
-                    _current.Property(JKeys.Generic.ResponseRequired) != null &&
-                    Convert.ToBoolean((string)_current[JKeys.Generic.ResponseRequired]))
+                if (_current == null && _queue.Count > 0 && string.IsNullOrEmpty(_currentCmdID))
                 {
-                    _current.Remove(JKeys.Generic.ResponseRequired);
-                    _currentCmdID = (string)_current[JKeys.Generic.CommandID];
-                    _timer.Start();
+                    _current = _queue.Dequeue();
+                    if (_current.Property(JKeys.Generic.CommandID) != null &&
+                        !string.IsNullOrWhiteSpace((string)_current[JKeys.Generic.CommandID]) &&
+                        _current.Property(JKeys.Generic.ResponseRequired) != null &&
+                        Convert.ToBoolean((string)_current[JKeys.Generic.ResponseRequired]))
+                    {
+                        _current.Remove(JKeys.Generic.ResponseRequired);
+                        _currentCmdID = (string)_current[JKeys.Generic.CommandID];
+                        _timer.Start();
+                    }
+                    else
+                    {
+                        _currentCmdID = string.Empty;
+                    }
+                    RaiseCurrentAsync();
                 }
-                else
-                {
-                    _currentCmdID = string.Empty;
-                }
-                RaiseCurrentAsync();
+            }
+            catch(Exception ex)
+            {
+                _logger.Error(ex, "CheckCommand() exception: {ex}");
             }
         }
 

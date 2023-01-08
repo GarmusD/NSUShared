@@ -34,10 +34,6 @@ namespace NSU.Shared.NSUNet
         private string _deviceID = string.Empty;
         private string _hash = string.Empty;
 
-        public Credentials()
-        {
-        }
-
         public void SetUsernameAndPassword(string newUsername, string newPassword, bool save)
         {
             if (_userName != newUsername || _password != newPassword)

@@ -280,6 +280,7 @@ namespace NSU.Shared.NSUNet
 
         public void SendCommand(JObject cmd)
         {
+            _logger.Debug($"SendCommand(): cmd: {cmd.ToString()}");
             if (Connected)
             {
                 _queue.Add(cmd);
