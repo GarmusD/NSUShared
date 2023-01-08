@@ -11,8 +11,6 @@ namespace NSU.Shared.NSUSystemPart
         #region Constants
         public const string NullAddress = "0:0:0:0:0:0:0:0";
 
-        private const string LogTag = "TempSensor";
-
         private const string XMLAttrAddr = "addr";
         private const string XMLAttrName = "name";
         private const string XMLAttrEnabled = "enabled";
@@ -53,7 +51,7 @@ namespace NSU.Shared.NSUSystemPart
 
         public static bool IsAddressNull(TempSensor value)
         {
-            return value.SensorID.All(b => b == 0);
+            return IsAddressNull(value.SensorID);
         }
 
         public static bool IsAddressNull(byte[] value)
@@ -188,7 +186,7 @@ namespace NSU.Shared.NSUSystemPart
 
         override public void AttachXMLNode(XElement xml)
         {
-            //Try to find node for update
+            // Try to find node for update
             if (!IsAddressNull(SensorID))
                 _xElement = xml.Elements().FirstOrDefault(item => CompareAddr(StringToAddr((string)item.Attribute(XMLAttrAddr))));
 

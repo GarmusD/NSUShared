@@ -225,7 +225,12 @@ namespace NSU.Shared.NSUSystemPart
             _spd1Channel = ((byte?)(int?)_xElement.Attribute(XMLAttrSpd1Channel)).GetValueOrDefault(INVALID_VALUE);
             _spd2Channel = ((byte?)(int?)_xElement.Attribute(XMLAttrSpd2Channel)).GetValueOrDefault(INVALID_VALUE);
             _spd3Channel = ((byte?)(int?)_xElement.Attribute(XMLAttrSpd3Channel)).GetValueOrDefault(INVALID_VALUE);
-            _status = ((Status?)(int?)_xElement.Attribute(XMLAttrStatus)).GetValueOrDefault(Status.OFF);
+            string statusValueStr = (string)_xElement.Attribute(XMLAttrStatus);
+            // Status value might be set as int - (int)Status.value
+            if (statusValueStr.Length == 1 && int.TryParse(statusValueStr, out int statusValueInt))
+                _status = (Status)statusValueInt;
+            else
+                _status = NSUUtils.Utils.GetStatusFromString((string)_xElement.Attribute(XMLAttrStatus), Status.OFF);
             _openedValvesCount = ((int?)(int?)_xElement.Attribute(XMLAttrOpenedValvesCount)).GetValueOrDefault(0);
         }
         #endregion

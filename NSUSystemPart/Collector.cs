@@ -145,6 +145,8 @@ namespace NSU.Shared.NSUSystemPart
             _enabled = ((bool?)_xElement.Attribute(XMLAttrEnabled)).GetValueOrDefault(false);
             _name = (string)_xElement.Attribute(XMLAttrName);
             _circPumpName = (string)_xElement.Attribute(XMLAttrCircPumpName);
+            foreach (var actuator in _actuators)
+                ((ThermoActuator)actuator).AttachXMLNode(_xElement);
         }
         #endregion
     }
