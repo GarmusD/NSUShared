@@ -276,6 +276,7 @@
             public const string Login = "login";
             public const string Handshake = "handshake";
             public const string Ping = "ping";
+            public const string Pong = "pong";
             public const string PushID = "pushid";
             public const string Ready = "ready";
         }
@@ -316,9 +317,10 @@
         }
 
         public static class ErrCodes
-        {
+        {            
             public static class Login
             {
+                public const string AuthRequired = "auth_required";
                 public const string InvalidUsrNamePassword = "invalid_pswd";
                 public const string InvalidHash = "invalid_hash";
             }
