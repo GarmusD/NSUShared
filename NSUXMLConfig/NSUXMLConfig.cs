@@ -61,12 +61,17 @@ namespace NSU.Shared.NSUXMLConfig
         {
             try
             {
-                xdoc = XDocument.Load(xmlString);
+                xdoc = XDocument.Parse(xmlString);
                 root = xdoc.Root;
                 configID = Guid.Parse(GetConfigSection(ConfigSection.ConfigID).Element("Value").Value);
                 return true;
             }
-            catch { return false; }
+            catch (Exception ex)
+            { 
+                //if(System.Diagnostics.Debugger.IsAttached)
+                    System.Diagnostics.Debug.WriteLine($"NSUXMLConfig Load exception: {ex}");
+                return false; 
+            }
         }
 
         public void Clear()
@@ -101,38 +106,26 @@ namespace NSU.Shared.NSUXMLConfig
 
         public XElement GetConfigSection(ConfigSection section)
         {
-            switch (section)
+            return section switch
             {
-                case ConfigSection.ConfigID:
-                    return root.Element(xConfigID);
-                case ConfigSection.Switches:
-                    return root.Element(xSwitches);
-                case ConfigSection.TSensors:
-                    return root.Element(xTSensors);
-                case ConfigSection.RelayModules:
-                    return root.Element(xRelayModules);
-                case ConfigSection.TempTriggers:
-                    return root.Element(xTempTriggers);
-                case ConfigSection.CirculationPumps:
-                    return root.Element(xCircPumps);
-                case ConfigSection.Collectors:
-                    return root.Element(xCollectors);
-                case ConfigSection.ComfortZones:
-                    return root.Element(xComfortZones);
-                case ConfigSection.KTypes:
-                    return root.Element(xKTypes);
-                case ConfigSection.WaterBoilers:
-                    return root.Element(xWaterBoilers);
-                case ConfigSection.WoodBoilers:
-                    return root.Element(xWoodBoilers);
-                default:
-                    throw new NotImplementedException($"XML Config section [{section}] not implemented.");
-            }
+                ConfigSection.ConfigID => root.Element(xConfigID),
+                ConfigSection.Switches => root.Element(xSwitches),
+                ConfigSection.TSensors => root.Element(xTSensors),
+                ConfigSection.RelayModules => root.Element(xRelayModules),
+                ConfigSection.TempTriggers => root.Element(xTempTriggers),
+                ConfigSection.CirculationPumps => root.Element(xCircPumps),
+                ConfigSection.Collectors => root.Element(xCollectors),
+                ConfigSection.ComfortZones => root.Element(xComfortZones),
+                ConfigSection.KTypes => root.Element(xKTypes),
+                ConfigSection.WaterBoilers => root.Element(xWaterBoilers),
+                ConfigSection.WoodBoilers => root.Element(xWoodBoilers),
+                _ => throw new NotImplementedException($"XML Config section [{section}] not implemented."),
+            };
         }
 
         public string GetXDocAsString()
         {
-            return xdoc.ToString();
+            return xdoc.ToString(SaveOptions.DisableFormatting);
         }
 
     }
