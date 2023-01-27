@@ -101,7 +101,7 @@ namespace NSU.Shared.NSUSystemPart
         public void UpdateActuatorStatus(bool[] status)
         {
             bool changed = false;
-            for(int i = 0; i < _actuators.Length; i++)
+            for(int i = 0; i < status.Length; i++)
             {
                 if (_actuators[i].Opened != status[i])
                 {
